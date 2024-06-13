@@ -7,6 +7,7 @@ interface Team {
   id: string;
   name: string;
   iconPath: string;
+  hrp: number;
 }
 
 export default function Teams() {
@@ -41,6 +42,10 @@ export default function Teams() {
           id: doc.id,
           ...doc.data()
         })) as Team[];
+
+        // hrpの降順で並び替え
+        teamsData.sort((a, b) => b.hrp - a.hrp);
+
         setTeams(teamsData);
       } catch (err) {
         console.error("Error fetching teams:", err);
