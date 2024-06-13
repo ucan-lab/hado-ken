@@ -19,16 +19,17 @@ export default function Page() {
     const [iconUrl, setIconUrl] = useState<string>('');
 
     useEffect(() => {
-      async function fetchIconUrl() {
-        if (props.iconPath) {
-          const iconRef = ref(storage, props.iconPath);
-          const url = await getDownloadURL(iconRef);
-          setIconUrl(url);
-        } else {
-          setIconUrl('/images/no-image.png');
-        }
+      setIconUrl('/images/no-image.png');
+
+      if (props.iconPath) {
+        fetchIconUrl();
       }
-      fetchIconUrl();
+
+      async function fetchIconUrl() {
+        const iconRef = ref(storage, props.iconPath);
+        const url = await getDownloadURL(iconRef);
+        setIconUrl(url);
+      }
     }, [props.iconPath]);
 
     return <img src={iconUrl} alt={`${props.teamName} icon`} width={50} height={50} />
