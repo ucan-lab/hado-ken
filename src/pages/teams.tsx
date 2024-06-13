@@ -10,7 +10,7 @@ interface Team {
   hrp: number;
 }
 
-export default function Teams() {
+export default function Page() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,14 +61,13 @@ export default function Teams() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>チーム一覧</h1>
-      <ul>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">チーム一覧</h1>
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {teams.map(team => (
-          <li key={team.id}>
-            <TeamIconImage iconPath={team.iconPath} teamName={`${team.name}`} />
-            <p>{team.id}: {team.name}</p>
-            <span>{team.name}</span>
+          <li key={team.id} className="border p-4 rounded-lg shadow">
+            <TeamIconImage iconPath={team.iconPath} teamName={`${team.name} icon`} />
+            <p className="mt-2 text-lg font-semibold">{team.name}</p>
           </li>
         ))}
       </ul>
