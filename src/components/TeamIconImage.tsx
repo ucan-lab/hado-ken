@@ -8,12 +8,14 @@ interface TeamIconImageProps {
 }
 
 export default function TeamIconImage({ iconPath, teamName }: TeamIconImageProps) {
-  const [iconUrl, setIconUrl] = useState<string>('');
+  const [iconUrl, setIconUrl] = useState<string>('/images/no-image.png');
 
   useEffect(() => {
-    setIconUrl('/images/no-image.png');
+    const cachedUrl = localStorage.getItem(iconPath);
 
-    if (iconPath) {
+    if (cachedUrl) {
+      setIconUrl(cachedUrl);
+    } else if (iconPath) {
       fetchIconUrl();
     }
 
@@ -21,6 +23,7 @@ export default function TeamIconImage({ iconPath, teamName }: TeamIconImageProps
       const iconRef = ref(storage, iconPath);
       const url = await getDownloadURL(iconRef);
       setIconUrl(url);
+      localStorage.setItem(iconPath, url);
     }
   }, [iconPath]);
 
