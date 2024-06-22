@@ -1,5 +1,6 @@
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
+import { FaMedal } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Team from 'types/Team';
@@ -81,9 +82,21 @@ export default function Results() {
               {votes.map((vote, index) => (
                 <li key={index} className="p-4 bg-gray-50 rounded-lg shadow-md">
                   <p className="text-lg font-semibold">{vote.name} さんの予想</p>
-                  <p>1位: {getTeamName(vote.first)}</p>
-                  <p>2位: {getTeamName(vote.second)}</p>
-                  <p>3位: {getTeamName(vote.third)}</p>
+                  <p>
+                    <span className="flex items-center">
+                      <FaMedal className="text-yellow-500 mr-2" /> {getTeamName(vote.first)}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="flex items-center">
+                      <FaMedal className="text-gray-400 mr-2" /> {getTeamName(vote.second)}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="flex items-center">
+                      <FaMedal className="text-orange-400 mr-2" /> {getTeamName(vote.third)}
+                    </span>
+                  </p>
                   <p className="text-gray-500 text-sm mt-2">投票日時: {vote.voteAt}</p>
                 </li>
               ))}

@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 interface SelectBoxProps {
-  label: string;
+  label: React.ReactNode;
   value: { label: string; value: string } | null;
   options: { label: string; value: string }[];
   onChange: (selectedOption: { label: string; value: string } | null) => void;

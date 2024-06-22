@@ -1,12 +1,13 @@
 import { collection, query, where, getDocs, doc, deleteDoc, addDoc } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
+import { FaMedal } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Modal from 'components/Modal';
 import SelectBox from 'components/SelectBox';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
 import Vote from 'types/Vote';
-import Link from 'next/link';
 
 export default function VoteComponent() {
   const [name, setName] = useState('');
@@ -159,19 +160,31 @@ export default function VoteComponent() {
                 />
               </div>
               <SelectBox
-                label="1位予想チーム"
+                label={
+                  <span className="flex items-center">
+                    <FaMedal className="text-yellow-500 mr-2" /> 1位予想チーム
+                  </span>
+                }
                 value={first}
                 options={teamOptions}
                 onChange={setFirst}
               />
               <SelectBox
-                label="2位予想チーム"
+                label={
+                  <span className="flex items-center">
+                    <FaMedal className="text-gray-400 mr-2" /> 2位予想チーム
+                  </span>
+                }
                 value={second}
                 options={teamOptions}
                 onChange={setSecond}
               />
               <SelectBox
-                label="3位予想チーム"
+                label={
+                  <span className="flex items-center">
+                    <FaMedal className="text-orange-400 mr-2" /> 3位予想チーム
+                  </span>
+                }
                 value={third}
                 options={teamOptions}
                 onChange={setThird}
