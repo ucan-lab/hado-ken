@@ -1,6 +1,7 @@
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, deleteDoc, addDoc } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
 import { useState, useEffect } from 'react';
+import Modal from 'components/Modal';
 import SelectBox from 'components/SelectBox';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
@@ -15,6 +16,8 @@ export default function VoteComponent() {
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [isTournamentDay, setIsTournamentDay] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // モーダルの状態を管理
+  const [flashMessage, setFlashMessage] = useState<string | null>(null); // フラッシュメッセージの状態を管理
 
   useEffect(() => {
     async function fetchTeams() {
@@ -68,6 +71,12 @@ export default function VoteComponent() {
       return;
     }
 
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = async () => {
+    if (!tournament || !name || !first || !second || !third) return;
+
     const vote: Omit<Vote, 'id'> = {
       name,
       first: first.value,
@@ -86,12 +95,26 @@ export default function VoteComponent() {
     };
 
     try {
+      // 既存の同じ名前とトーナメントIDのドキュメントを削除
+      const q = query(
+        collection(db, 'votes'),
+        where('name', '==', name),
+        where('tournamentId', '==', tournament.id)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (docSnapshot) => {
+        await deleteDoc(doc(db, 'votes', docSnapshot.id));
+      });
+
       await addDoc(collection(db, 'votes'), vote);
-      alert('送信しました！');
+      setFlashMessage('送信しました！');
+      setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
       setError('送信に失敗しました。');
       console.error('送信失敗', error);
     }
+
+    setIsModalOpen(false);
   };
 
   const teamOptions = teams.map(team => ({ value: team.id, label: team.name }));
@@ -102,6 +125,7 @@ export default function VoteComponent() {
       {isTournamentDay ? (
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           {error && <p className="text-red-500 mb-4">{error}</p>}
+          {flashMessage && <p className="text-green-500 mb-4">{flashMessage}</p>}
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 font-bold mb-2">名前</label>
             <input
@@ -142,6 +166,13 @@ export default function VoteComponent() {
       ) : (
         <p className="text-red-500 text-xl">本日の投票できません。</p>
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+        title="送信"
+        content="この内容で送信しますか？"
+      />
     </div>
   );
 }
