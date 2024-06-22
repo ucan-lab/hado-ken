@@ -1,4 +1,4 @@
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
 import { FaMedal } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
@@ -25,8 +25,12 @@ export default function Results() {
       setTeams(teamsData);
     }
 
-    async function fetchVotes() {
-      const q = query(collection(db, 'votes'), orderBy('voteAt', 'asc'));
+    async function fetchVotes(tournamentId: string) {
+      const q = query(
+        collection(db, 'votes'),
+        where('tournamentId', '==', tournamentId),
+        orderBy('voteAt', 'asc')
+      );
       const querySnapshot = await getDocs(q);
       const votesData = querySnapshot.docs.map(doc => doc.data() as Vote);
       setVotes(votesData);
@@ -46,13 +50,13 @@ export default function Results() {
         if (tournament.gameDate === today) {
           setIsTournamentDay(true);
           setTournament(tournament);
+          fetchVotes(tournament.id);
         }
       });
     }
 
     async function fetchData() {
       await fetchTeams();
-      await fetchVotes();
       await checkTournamentDay();
       setLoading(false);
     }
