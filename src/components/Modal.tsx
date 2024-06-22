@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title, conten
         <p className="mb-6">{content}</p>
         <div className="flex justify-end space-x-4">
           <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">キャンセル</button>
-          <button onClick={onConfirm} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">確認</button>
+          <button onClick={onConfirm} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">OK</button>
         </div>
       </div>
     </div>

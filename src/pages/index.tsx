@@ -7,6 +7,7 @@ export default function Page() {
       <ul>
         <li><Link href="/teams">チーム一覧</Link></li>
         <li><Link href="/vote">投票</Link></li>
+        <li><Link href="/result">投票結果</Link></li>
       </ul>
     </div>
   );

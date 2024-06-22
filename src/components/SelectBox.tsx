@@ -18,7 +18,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ label, value, options, onChange }
         options={options}
         className="w-full"
         classNamePrefix="react-select"
-        placeholder={label}
+        placeholder="-"
         isSearchable
       />
     </div>

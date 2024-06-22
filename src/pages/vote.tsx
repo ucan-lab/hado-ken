@@ -6,6 +6,7 @@ import SelectBox from 'components/SelectBox';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
 import Vote from 'types/Vote';
+import Link from 'next/link'; // Import Link component from next/link
 
 export default function VoteComponent() {
   const [name, setName] = useState('');
@@ -15,9 +16,10 @@ export default function VoteComponent() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [isTournamentDay, setIsTournamentDay] = useState(false);
+  const [isBeforeDeadline, setIsBeforeDeadline] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // モーダルの状態を管理
-  const [flashMessage, setFlashMessage] = useState<string | null>(null); // フラッシュメッセージの状態を管理
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchTeams() {
@@ -42,6 +44,14 @@ export default function VoteComponent() {
         const tournamentData = doc.data() as Omit<Tournament, 'id'>;
         const tournament = { id: doc.id, ...tournamentData };
         if (tournament.gameDate === today) {
+          const now = new Date();
+          const deadline = new Date();
+          deadline.setHours(12, 30, 0, 0);
+
+          if (now <= deadline) {
+            setIsBeforeDeadline(true);
+          }
+
           setIsTournamentDay(true);
           setTournament(tournament);
         }
@@ -56,8 +66,8 @@ export default function VoteComponent() {
     e.preventDefault();
     setError(null);
 
-    if (!isTournamentDay || !tournament) {
-      alert('本日の投票できません。');
+    if (!isTournamentDay || !tournament || !isBeforeDeadline) {
+      alert('本日の投票はできません。');
       return;
     }
 
@@ -121,48 +131,59 @@ export default function VoteComponent() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-6">HADO {tournament?.name} 大会優勝予想</h1>
       {isTournamentDay ? (
-        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          {flashMessage && <p className="text-green-500 mb-4">{flashMessage}</p>}
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">名前</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="名前"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              required
-            />
-          </div>
-          <SelectBox
-            label="1位予想チーム"
-            value={first}
-            options={teamOptions}
-            onChange={setFirst}
-          />
-          <SelectBox
-            label="2位予想チーム"
-            value={second}
-            options={teamOptions}
-            onChange={setSecond}
-          />
-          <SelectBox
-            label="3位予想チーム"
-            value={third}
-            options={teamOptions}
-            onChange={setThird}
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            予想送信
-          </button>
-        </form>
+        <>
+          <h1 className="text-4xl font-bold mb-6">HADO {tournament?.name} 大会優勝予想</h1>
+          {isBeforeDeadline ? (
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+              {error && <p className="text-red-500 mb-4">{error}</p>}
+              {flashMessage && <p className="text-green-500 mb-4">{flashMessage}</p>}
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-gray-700 font-bold mb-2">名前</label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="名前"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  required
+                />
+              </div>
+              <SelectBox
+                label="1位予想チーム"
+                value={first}
+                options={teamOptions}
+                onChange={setFirst}
+              />
+              <SelectBox
+                label="2位予想チーム"
+                value={second}
+                options={teamOptions}
+                onChange={setSecond}
+              />
+              <SelectBox
+                label="3位予想チーム"
+                value={third}
+                options={teamOptions}
+                onChange={setThird}
+              />
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                投票
+              </button>
+            </form>
+          ) : (
+            <p className="text-red-500 text-xl">投票可能時間を超えました。</p>
+          )}
+          <Link href="/result">
+            <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+              投票結果ページへ
+            </button>
+          </Link>
+        </>
       ) : (
         <p className="text-red-500 text-xl">本日の投票できません。</p>
       )}
@@ -170,8 +191,8 @@ export default function VoteComponent() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirm}
-        title="送信"
-        content="この内容で送信しますか？"
+        title="投票"
+        content="この内容で投票しますか？"
       />
     </div>
   );

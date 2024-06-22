@@ -1,6 +1,7 @@
 import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
 import Vote from 'types/Vote';
@@ -26,7 +27,6 @@ export default function Results() {
       const q = query(collection(db, 'votes'), orderBy('voteAt', 'asc'));
       const querySnapshot = await getDocs(q);
       const votesData = querySnapshot.docs.map(doc => doc.data() as Vote);
-      console.log(votesData);
       setVotes(votesData);
     }
 
@@ -56,7 +56,7 @@ export default function Results() {
   // 日本時間の現在時刻を取得
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   const deadline = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-  deadline.setHours(0, 30, 0, 0);
+  deadline.setHours(12, 30, 0, 0);
 
   const getTeamName = (teamId: string) => {
     const team = teams.find(t => t.id === teamId);
@@ -82,10 +82,20 @@ export default function Results() {
             </ul>
           </div>
         ) : (
-          <p className="text-red-500 text-lg mt-4">投票結果は 12:30 以降に表示されます。</p>
+          <>
+            <p className="text-red-500 text-lg mt-4">投票結果は 12:30 以降に表示されます。</p>
+            <Link href="/vote">
+              <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                投票ページへ
+              </button>
+            </Link>
+          </>
         )
       ) : (
-        <p className="text-red-500 text-lg mt-4">本日は大会がありません。</p>
+        <>
+          <h1 className="text-2xl font-bold text-center mb-6">HADO大会投票結果ページ</h1>
+          <p className="text-red-500 text-lg mt-4">本日は大会がありません。</p>
+        </>
       )}
     </div>
   );
