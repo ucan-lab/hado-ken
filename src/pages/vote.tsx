@@ -8,9 +8,9 @@ import Vote from 'types/Vote';
 
 export default function VoteComponent() {
   const [name, setName] = useState('');
-  const [first, setFirst] = useState('');
-  const [second, setSecond] = useState('');
-  const [third, setThird] = useState('');
+  const [first, setFirst] = useState<{ label: string; value: string } | null>(null);
+  const [second, setSecond] = useState<{ label: string; value: string } | null>(null);
+  const [third, setThird] = useState<{ label: string; value: string } | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [isTournamentDay, setIsTournamentDay] = useState(false);
@@ -63,16 +63,16 @@ export default function VoteComponent() {
       return;
     }
 
-    if (first === second || second === third || first === third) {
+    if (!first || !second || !third || first.value === second.value || second.value === third.value || first.value === third.value) {
       setError('1位から3位には異なるチームを指定してください。');
       return;
     }
 
     const vote: Omit<Vote, 'id'> = {
       name,
-      first: first,
-      second: second,
-      third: third,
+      first: first.value,
+      second: second.value,
+      third: third.value,
       voteAt: (new Date()).toLocaleString('ja-JP', {
         timeZone: 'Asia/Tokyo',
         year: 'numeric',
@@ -93,6 +93,8 @@ export default function VoteComponent() {
       console.error('送信失敗', error);
     }
   };
+
+  const teamOptions = teams.map(team => ({ value: team.id, label: team.name }));
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
@@ -115,20 +117,20 @@ export default function VoteComponent() {
           <SelectBox
             label="1位予想チーム"
             value={first}
-            options={teams}
-            onChange={(e) => setFirst(e.target.value)}
+            options={teamOptions}
+            onChange={setFirst}
           />
           <SelectBox
             label="2位予想チーム"
             value={second}
-            options={teams}
-            onChange={(e) => setSecond(e.target.value)}
+            options={teamOptions}
+            onChange={setSecond}
           />
           <SelectBox
             label="3位予想チーム"
             value={third}
-            options={teams}
-            onChange={(e) => setThird(e.target.value)}
+            options={teamOptions}
+            onChange={setThird}
           />
           <button
             type="submit"
