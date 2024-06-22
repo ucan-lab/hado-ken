@@ -1,4 +1,4 @@
-import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from 'lib/firebase/firebase';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ export default function Results() {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [isTournamentDay, setIsTournamentDay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTeams() {
@@ -48,9 +49,14 @@ export default function Results() {
       });
     }
 
-    fetchTeams();
-    fetchVotes();
-    checkTournamentDay();
+    async function fetchData() {
+      await fetchTeams();
+      await fetchVotes();
+      await checkTournamentDay();
+      setLoading(false);
+    }
+
+    fetchData();
   }, []);
 
   // 日本時間の現在時刻を取得
@@ -65,7 +71,9 @@ export default function Results() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      {isTournamentDay && tournament ? (
+      {loading ? (
+        <></>
+      ) : isTournamentDay && tournament ? (
         now >= deadline ? (
           <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl w-full">
             <h1 className="text-2xl font-bold text-center mb-6">HADO {tournament?.name} 大会投票結果</h1>

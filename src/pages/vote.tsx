@@ -6,7 +6,7 @@ import SelectBox from 'components/SelectBox';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
 import Vote from 'types/Vote';
-import Link from 'next/link'; // Import Link component from next/link
+import Link from 'next/link';
 
 export default function VoteComponent() {
   const [name, setName] = useState('');
@@ -20,6 +20,7 @@ export default function VoteComponent() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTeams() {
@@ -58,8 +59,13 @@ export default function VoteComponent() {
       });
     }
 
-    fetchTeams();
-    checkTournamentDay();
+    async function fetchData() {
+      await fetchTeams();
+      await checkTournamentDay();
+      setLoading(false);
+    }
+
+    fetchData();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,7 +137,9 @@ export default function VoteComponent() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      {isTournamentDay ? (
+      {loading ? (
+        <></>
+      ) : isTournamentDay ? (
         <>
           <h1 className="text-4xl font-bold mb-6">HADO {tournament?.name} 大会優勝予想</h1>
           {isBeforeDeadline ? (
