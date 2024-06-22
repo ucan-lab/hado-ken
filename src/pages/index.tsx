@@ -6,6 +6,7 @@ export default function Page() {
       <h1 className="text-2xl font-bold mb-4">HADO券</h1>
       <ul>
         <li><Link href="/teams">チーム一覧</Link></li>
+        <li><Link href="/vote">投票</Link></li>
       </ul>
     </div>
   );
