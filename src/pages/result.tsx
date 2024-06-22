@@ -109,6 +109,7 @@ export default function Results() {
         ) : (
           <>
             <p className="text-red-500 text-lg mt-4">投票結果は 12:30 以降に表示されます。</p>
+
             <Link href="/vote">
               <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
                 投票ページへ

@@ -142,7 +142,7 @@ export default function VoteComponent() {
         <></>
       ) : isTournamentDay ? (
         <>
-          <h1 className="text-4xl font-bold mb-6">HADO {tournament?.name} 大会優勝予想</h1>
+          <h1 className="text-3xl font-bold mb-6 text-center">HADO {tournament?.name}<br />三連単予想投票</h1>
           {isBeforeDeadline ? (
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
               {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -195,15 +195,26 @@ export default function VoteComponent() {
               >
                 投票
               </button>
+              <ul className="list-disc mt-4 text-gray-500">
+                <li>投票は 12:30 まで行えます。</li>
+                <li>再投票は行えます。</li>
+              </ul>
             </form>
           ) : (
             <p className="text-red-500 text-xl">投票可能時間を超えました。</p>
           )}
-          <Link href="/result">
-            <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
-              投票結果ページへ
-            </button>
-          </Link>
+          <div className="flex space-x-4 mt-4">
+            <Link href="/result">
+              <button className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                投票結果ページへ
+              </button>
+            </Link>
+            <Link href="/qr-code" rel="noopener noreferrer" target="_blank">
+              <button className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                QRコード
+              </button>
+            </Link>
+          </div>
         </>
       ) : (
         <p className="text-red-500 text-xl">本日の投票できません。</p>
