@@ -1,5 +1,5 @@
-import TeamList from 'components/TeamList';
+import TeamListComponent from 'components/TeamListComponent';
 
 export default function Page() {
-  return <TeamList />;
+  return <TeamListComponent />;
 }

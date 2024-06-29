@@ -3,8 +3,8 @@ import { db } from 'lib/firebase/firebase';
 import { FaMedal } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Modal from 'components/Modal';
-import SelectBox from 'components/SelectBox';
+import ModalComponent from 'components/ModalComponent';
+import SelectBoxComponent from 'components/SelectBoxComponent';
 import Team from 'types/Team';
 import Tournament from 'types/Tournament';
 import Vote from 'types/Vote';
@@ -159,7 +159,7 @@ export default function VoteComponent() {
                   required
                 />
               </div>
-              <SelectBox
+              <SelectBoxComponent
                 label={
                   <span className="flex items-center">
                     <FaMedal className="text-yellow-500 mr-2" /> 1位予想チーム
@@ -169,7 +169,7 @@ export default function VoteComponent() {
                 options={teamOptions}
                 onChange={setFirst}
               />
-              <SelectBox
+              <SelectBoxComponent
                 label={
                   <span className="flex items-center">
                     <FaMedal className="text-gray-400 mr-2" /> 2位予想チーム
@@ -179,7 +179,7 @@ export default function VoteComponent() {
                 options={teamOptions}
                 onChange={setSecond}
               />
-              <SelectBox
+              <SelectBoxComponent
                 label={
                   <span className="flex items-center">
                     <FaMedal className="text-orange-400 mr-2" /> 3位予想チーム
@@ -219,7 +219,7 @@ export default function VoteComponent() {
       ) : (
         <p className="text-red-500 text-xl">本日の投票できません。</p>
       )}
-      <Modal
+      <ModalComponent
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirm}

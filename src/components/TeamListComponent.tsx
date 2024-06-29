@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { db } from 'lib/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import Team from 'types/Team';
-import TeamIconImage from './TeamIconImage';
+import TeamIconImage from './TeamIconImageComponent';
 
-export default function TeamList() {
+export default function TeamListComponent() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -8,7 +8,7 @@ interface ModalProps {
   content: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title, content }) => {
+const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title, content }) => {
   if (!isOpen) return null;
 
   return (
@@ -25,4 +25,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title, conten
   );
 };
 
-export default Modal;
+export default ModalComponent;

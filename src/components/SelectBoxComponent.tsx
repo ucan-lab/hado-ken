@@ -8,7 +8,7 @@ interface SelectBoxProps {
   onChange: (selectedOption: { label: string; value: string } | null) => void;
 }
 
-const SelectBox: React.FC<SelectBoxProps> = ({ label, value, options, onChange }) => {
+const SelectBoxComponent: React.FC<SelectBoxProps> = ({ label, value, options, onChange }) => {
   return (
     <div className="mb-4">
       <label className="block text-gray-700 font-bold mb-2">{label}</label>
@@ -25,4 +25,4 @@ const SelectBox: React.FC<SelectBoxProps> = ({ label, value, options, onChange }
   );
 };
 
-export default SelectBox;
+export default SelectBoxComponent;
