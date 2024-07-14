@@ -67,7 +67,7 @@ export default function Results() {
   // 日本時間の現在時刻を取得
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   const deadline = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-  deadline.setHours(15, 0, 0, 0);
+  deadline.setHours(14, 30, 0, 0);
 
   const getTeamName = (teamId: string) => {
     const team = teams.find(t => t.id === teamId);
@@ -108,7 +108,7 @@ export default function Results() {
           </div>
         ) : (
           <>
-            <p className="text-red-500 text-lg mt-4">投票結果は 15:00 以降に表示されます。</p>
+            <p className="text-red-500 text-lg mt-4">投票結果は 14:30 以降に表示されます。</p>
 
             <Link href="/vote">
               <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
