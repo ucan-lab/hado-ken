@@ -48,7 +48,7 @@ export default function VoteComponent() {
         if (tournament.gameDate === today) {
           const now = new Date();
           const deadline = new Date();
-          deadline.setHours(14, 0, 0, 0);
+          deadline.setHours(14, 40, 0, 0);
 
           if (now <= deadline) {
             setIsBeforeDeadline(true);
@@ -196,7 +196,7 @@ export default function VoteComponent() {
                 投票
               </button>
               <ul className="list-disc mt-4 text-gray-500">
-                <li>投票は 14:00 まで行えます。</li>
+                <li>投票は 14:40 まで行えます。</li>
                 <li>再投票は行えます。</li>
               </ul>
             </form>
